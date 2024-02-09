@@ -1,6 +1,9 @@
 name: Generate and export RSA 8192 key pair
 
-on: push
+on:
+  watch:
+    types: [started]
+
 
 jobs:
   generate-key:
