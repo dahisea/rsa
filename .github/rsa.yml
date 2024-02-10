@@ -1,29 +1,26 @@
-name: Generate and export RSA 8192 key pair
+name: Generate RSA8192 keys and export
 
 on:
-  watch:
-    types: [started]
-
+  push:
+    branches:
+      - main
 
 jobs:
-  generate-key:
+  generate_keys:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v2
-      - name: Generate key pair
-        run: |
-          ssh-keygen -t rsa -b 8192 -C "your_email@example.com" -f id_rsa -N ""
-      - name: Append key pair to workflow file
-        run: |
-          echo "```" >> .github/workflows/rsa.yml
-          cat id_rsa >> .github/workflows/rsa.yml
-          cat id_rsa.pub >> .github/workflows/rsa.yml
-          echo "```" >> .github/workflows/rsa.yml
-      - name: Commit and push workflow file
-        run: |
-          git config user.name "Your Name"
-          git config user.email "your_email@example.com"
-          git add .github/workflows/rsa.yml
-          git commit -m "Add key pair to workflow file"
-          git push origin main
+
+      - name: Generate RSA8192 keys
+        run: openssl genpkey -algorithm RSA -out private_key.pem -pkeyopt rsa_keygen_bits:24576 && openssl rsa -pubout -in private_key.pem -out public_key.pem
+
+      - name: Zip keys
+        run: zip keys.zip private_key.pem public_key.pem
+
+      - name: Upload keys
+        uses: actions/upload-artifact@v2
+        with:
+          name: rsa8192_keys
+          path: keys.zip
