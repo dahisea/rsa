@@ -16,8 +16,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Generate RSA8192 keys
-        run: openssl genpkey -algorithm RSA -out private_key.pem -pkeyopt rsa_keygen_bits:24576 && openssl rsa -pubout -in private_key.pem -out public_key.pem
-
+        run: openssl genrsa -out private_key.pem 24576 && openssl rsa -pubout -in private_key.pem -out public_key.pem
       - name: Zip keys
         run: zip keys.zip private_key.pem public_key.pem
 
