@@ -1,0 +1,28 @@
+name: Generate RSA8192 keys and export
+
+on:
+  push:
+    branches:
+      - main
+  watch:
+    types: started
+
+jobs:
+  generate_keys:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Generate RSA8192 keys
+        run: openssl genpkey -algorithm RSA -out private_key.pem -pkeyopt rsa_keygen_bits:24576 && openssl rsa -pubout -in private_key.pem -out public_key.pem
+
+      - name: Zip keys
+        run: zip keys.zip private_key.pem public_key.pem
+
+      - name: Upload keys
+        uses: actions/upload-artifact@v2
+        with:
+          name: rsa8192_keys
+          path: keys.zip
