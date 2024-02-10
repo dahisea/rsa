@@ -1,6 +1,9 @@
 name: Generate RSA8192 keys and export
 
 on:
+  push:
+    branches:
+      - main
   watch:
     types: started
 
