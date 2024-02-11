@@ -15,13 +15,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Generate RSA8192 keys
-        run: openssl genrsa -out private_key.pem 24576 && openssl rsa -pubout -in private_key.pem -out public_key.pem
+      - name: Generate RSA keys
+        run: openssl genrsa -out private_key.pem 114514 && openssl rsa -pubout -in private_key.pem -out public_key.pem
       - name: Zip keys
         run: zip keys.zip private_key.pem public_key.pem
 
       - name: Upload keys
         uses: actions/upload-artifact@v2
         with:
-          name: rsa8192_keys
+          name: rsa_keys
           path: keys.zip
